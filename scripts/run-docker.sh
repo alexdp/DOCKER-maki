@@ -45,28 +45,28 @@ echo "Docker configuré avec le répertoire de données : $DOCKER_DATA_ROOT_DIR"
 
 
 # Démarrage de Nginx avec Docker
-docker load -i /var/local/docker/nginx-latest.tar
-docker rm --force --volumes nginx
+docker load -i /var/local/docker/nginx-latest.tar || true
+docker rm --force --volumes nginx || true
 docker run -d --name nginx \
   --network host \
   -v /var/www/html:/usr/share/nginx/html:ro \
-  nginx:latest
+  nginx:latest || true
 
 
 # Démarrage de Portainer avec Docker
-docker load -i /var/local/docker/portainer-latest.tar
-docker rm --force --volumes portainer
+docker load -i /var/local/docker/portainer-latest.tar || true
+docker rm --force --volumes portainer || true
 docker run -d --name portainer \
   --network host \
   --restart always \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v portainer_data:/data \
-  portainer:latest
+  portainer:latest || true
 
 
 # Démarrage de Samba avec Docker
-adduser --system --no-create-home --group smbuser
-docker load -i /var/local/docker/samba-latest.tar
+adduser --system --no-create-home --group smbuser || true
+docker load -i /var/local/docker/samba-latest.tar || true
 mkdir -p /var/local/samba 
 cat > /var/local/samba/smb.conf << EOF
 [global]
@@ -85,14 +85,14 @@ cat > /var/local/samba/smb.conf << EOF
    create mask = 0666
    create directory = 0777
 EOF
-docker rm --force --volumes samba
+docker rm --force --volumes samba || true
 docker run -d --name samba \
   --network host \
   -v $FIRST_MOUNT:/mnt \
   -v /var/local/samba/smb.conf:/etc/samba/smb.conf \
   samba:latest \
   -u "admin;password" \
-  -n
+  -n || true
 
 
 # Démarrage Filebrowser avec Docker
@@ -124,8 +124,8 @@ userDefaults:
     share: false
     api: false
 EOF
-docker load -i /var/local/docker/filebrowser-latest.tar
-docker rm --force --volumes filebrowser
+docker load -i /var/local/docker/filebrowser-latest.tar || true
+docker rm --force --volumes filebrowser || true
 docker run -d \
   --name filebrowser \
   --network host \
@@ -136,13 +136,13 @@ docker run -d \
   -e PGID=$(id -g smbuser) \
   -e FB_USER=admin \
   -e FB_PASSWORD=password \
-  filebrowser:latest
+  filebrowser:latest || true
 
 echo "✓ File Browser démarré avec Docker sur le port 8080"
 
 # Démarrage de Jellyfin avec Docker
-docker load -i /var/local/docker/jellyfin-latest.tar
-docker rm --force --volumes jellyfin
+docker load -i /var/local/docker/jellyfin-latest.tar || true
+docker rm --force --volumes jellyfin || true
 docker run -d \
   --name=jellyfin \
   --network host \
@@ -152,12 +152,12 @@ docker run -d \
   -v jellyfin_config:/config \
   -v jellyfin_cache:/cache \
   -v /mnt:/media:ro \
-  jellyfin:latest
+  jellyfin:latest || true
 
 
 # Démarrage de PiGallery2 avec Docker
-docker load -i /var/local/docker/pigallery2-latest.tar
-mkdir -p /var/local/pigallery2
+docker load -i /var/local/docker/pigallery2-latest.tar || true
+mkdir -p /var/local/pigallery2 || true
 cat > /var/local/pigallery2/config.json << EOF
 {
   "Server": {
@@ -169,38 +169,38 @@ cat > /var/local/pigallery2/config.json << EOF
   }
 }
 EOF
-docker rm --force --volumes pigallery2
+docker rm --force --volumes pigallery2 || true
 docker run -d \
   --name pigallery2 \
   --network host \
   -v /mnt:/app/data/images:ro \
   -v /var/local/pigallery2/config.json:/app/data/config/config.json:ro \
   -v pigallery2_db:/app/data/db \
-  pigallery2:latest
+  pigallery2:latest || true
 
 
 
 # Démarrage de Immich avec Docker
-docker load -i /var/local/docker/immich-latest.tar
-docker load -i /var/local/docker/immich-valkey-latest.tar
-docker load -i /var/local/docker/immich-postgres-latest.tar
-docker rm --force --volumes immich
-docker rm --force --volumes immich-valkey
-docker rm --force immich-postgres
+docker load -i /var/local/docker/immich-latest.tar || true
+docker load -i /var/local/docker/immich-valkey-latest.tar || true
+docker load -i /var/local/docker/immich-postgres-latest.tar || true
+docker rm --force --volumes immich || true
+docker rm --force --volumes immich-valkey || true
+docker rm --force immich-postgres || true
 docker run -d --name immich-postgres \
   --network host \
   -e POSTGRES_USER=immich \
   -e POSTGRES_PASSWORD=immich \
   -e POSTGRES_DB=immich \
   -v immich_postgres_data:/var/lib/postgresql/data \
-  immich-postgres:latest
+  immich-postgres:latest || true
 docker run -d --name immich-valkey \
   --network host \
   -e VALKEY_PASSWORD=immich \
   -e VALKEY_DATABASE=immich \
   -e VALKEY_PORT=6379 \
   -v immich_valkey_data:/data \
-  immich-valkey:latest
+  immich-valkey:latest || true
 docker run -d --name immich \
   --network host \
   -e PUID=$(id -u smbuser) \
@@ -213,6 +213,6 @@ docker run -d --name immich \
   -e SERVER_HOST=0.0.0.0 \
   -e SERVER_PORT=8088 \
   -v $FIRST_MOUNT:/photos \
-  immich:latest
+  immich:latest || true
 
   

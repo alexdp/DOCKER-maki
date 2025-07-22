@@ -58,7 +58,7 @@ echo "Image Docker rclone téléchargée et enregistrée dans /var/local/docker/
 # Récupère les images Docker pour Immich
 echo "Téléchargement des images Docker Immich..."
 skopeo copy \
-  docker://ghcr.io/imagegenius/immich:v1.135.3 \
+  docker://ghcr.io/imagegenius/immich:amd64-noml-v1.135.3-ig316 \
   docker-archive:/var/local/docker/immich-latest.tar:immich:latest
 skopeo copy \
   docker://docker.io/valkey/valkey:8-bookworm \
