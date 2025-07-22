@@ -1,0 +1,13 @@
+[Unit]
+Description=Script de démarrage custom
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/entrypoint.sh
+RemainAfterExit=true
+User=root
+
+[Install]
+WantedBy=multi-user.target

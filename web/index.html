@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏠 Dashboard NAS - Services</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏠</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeInUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .service-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-card p {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-port {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            color: white;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .info-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: rgba(255,255,255,0.8);
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            background: #27ae60;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .header h1 { font-size: 2rem; }
+            .services-grid { grid-template-columns: 1fr; }
+            .service-card { padding: 1.5rem; }
+        }
+
+        /* Styles pour les cartes spécifiques */
+        .portainer { 
+            border-left: 4px solid #13bef9;
+            background: linear-gradient(145deg, rgba(19, 190, 249, 0.1), rgba(255,255,255,0.95));
+        }
+        
+        .filebrowser { 
+            border-left: 4px solid #ff6b35;
+            background: linear-gradient(145deg, rgba(255, 107, 53, 0.1), rgba(255,255,255,0.95));
+        }
+        
+        .jellyfin { 
+            border-left: 4px solid #00a4dc;
+            background: linear-gradient(145deg, rgba(0, 164, 220, 0.1), rgba(255,255,255,0.95));
+        }
+        
+        .pigallery { 
+            border-left: 4px solid #e74c3c;
+            background: linear-gradient(145deg, rgba(231, 76, 60, 0.1), rgba(255,255,255,0.95));
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles">
+        <div class="particle" style="left: 10%; width: 20px; height: 20px; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; width: 15px; height: 15px; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; width: 25px; height: 25px; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; width: 10px; height: 10px; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 50%; width: 18px; height: 18px; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 60%; width: 22px; height: 22px; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; width: 12px; height: 12px; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 80%; width: 16px; height: 16px; animation-delay: 2.5s;"></div>
+        <div class="particle" style="left: 90%; width: 20px; height: 20px; animation-delay: 4.5s;"></div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1>🏠 Dashboard NAS</h1>
+            <p>Accès rapide à tous vos services<span class="status-indicator"></span></p>
+        </header>
+
+        <div class="services-grid">
+            <a href="http://[IP]:9000" class="service-card portainer" target="_blank">
+                <span class="service-icon">🐳</span>
+                <h3>Portainer</h3>
+                <p>Interface de gestion Docker complète pour administrer vos conteneurs, images et volumes en toute simplicité</p>
+                <span class="service-port">Port 9000</span>
+            </a>
+
+            <a href="http://[IP]:8080" class="service-card filebrowser" target="_blank">
+                <span class="service-icon">📁</span>
+                <h3>File Browser</h3>
+                <p>Explorateur de fichiers web moderne pour naviguer, télécharger et gérer tous vos documents</p>
+                <span class="service-port">Port 8080</span>
+            </a>
+
+            <a href="http://[IP]:8096" class="service-card jellyfin" target="_blank">
+                <span class="service-icon">🎬</span>
+                <h3>Jellyfin</h3>
+                <p>Serveur multimédia open-source pour streamer vos films, séries TV et musiques depuis n'importe où</p>
+                <span class="service-port">Port 8096</span>
+            </a>
+
+            <a href="http://[IP]:8082" class="service-card pigallery" target="_blank">
+                <span class="service-icon">📸</span>
+                <h3>PiGallery2</h3>
+                <p>Galerie photo intelligente avec reconnaissance faciale, géolocalisation et tri automatique</p>
+                <span class="service-port">Port 8082</span>
+            </a>
+        </div>
+
+        <div class="info-section">
+            <h2>📋 Informations système & Accès</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-icon">🔐</span>
+                    <div>
+                        <strong>Accès SSH:</strong><br>
+                        <code>ssh ubuntu@[IP]</code><br>
+                        <small>(sans mot de passe)</small>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">🗂️</span>
+                    <div>
+                        <strong>Partage Samba:</strong><br>
+                        <code>\\[IP]\public</code><br>
+                        <small>Utilisateur: smbuser / Mot de passe: smbpass</small>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">🏷️</span>
+                    <div>
+                        <strong>Nom d'hôte:</strong><br>
+                        <code>nas</code><br>
+                        <small>Identifiant réseau du serveur</small>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">⚙️</span>
+                    <div>
+                        <strong>Services actifs:</strong><br>
+                        Docker, SSH, Samba<br>
+                        <small>Démarrage automatique</small>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">💾</span>
+                    <div>
+                        <strong>Stockage:</strong><br>
+                        Auto-détection disques<br>
+                        <small>Montage automatique</small>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">🌐</span>
+                    <div>
+                        <strong>Réseau:</strong><br>
+                        Configuration DHCP<br>
+                        <small>IP automatique</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🚀 Ubuntu Server Custom ISO - Powered by Docker</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.7;">
+                Built with ❤️ - Configuration automatique de tous les services
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">
+                💡 Astuce: Marquez cette page dans vos favoris pour un accès rapide
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Auto-détection de l'IP et remplacement des liens
+        document.addEventListener('DOMContentLoaded', function() {
+            // Essayer de détecter l'IP automatiquement
+            const hostname = window.location.hostname;
+            
+            if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1' && hostname !== '') {
+                // Remplacer [IP] par l'IP actuelle
+                document.querySelectorAll('a[href*="[IP]"], code').forEach(element => {
+                    if (element.tagName === 'A') {
+                        element.href = element.href.replace('[IP]', hostname);
+                    } else {
+                        element.textContent = element.textContent.replace(/\[IP\]/g, hostname);
+                    }
+                });
+                
+                // Mettre à jour le titre de la page avec l'IP
+                document.title = `🏠 Dashboard NAS - ${hostname}`;
+            }
+
+            // Animation de chargement des cartes avec délai progressif
+            const cards = document.querySelectorAll('.service-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Animation des particules aléatoires
+            createFloatingParticles();
+
+            // Test de disponibilité des services (optionnel)
+            if (hostname && hostname !== 'localhost' && hostname !== '') {
+                setTimeout(() => {
+                    testServiceAvailability();
+                }, 2000);
+            }
+
+            // Effet de parallax léger sur scroll
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('.header');
+                const speed = scrolled * 0.5;
+                
+                if (parallax) {
+                    parallax.style.transform = `translateY(${speed}px)`;
+                }
+            });
+        });
+
+        function createFloatingParticles() {
+            const container = document.querySelector('.floating-particles');
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.width = particle.style.height = (Math.random() * 20 + 10) + 'px';
+                    particle.style.animationDelay = Math.random() * 6 + 's';
+                    particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                    container.appendChild(particle);
+                    
+                    // Supprimer la particule après l'animation
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 8000);
+                }, i * 1000);
+            }
+        }
+
+        async function testServiceAvailability() {
+            const services = [
+                { port: 9000, card: '.portainer', name: 'Portainer' },
+                { port: 8080, card: '.filebrowser', name: 'File Browser' },
+                { port: 8096, card: '.jellyfin', name: 'Jellyfin' },
+                { port: 8082, card: '.pigallery', name: 'PiGallery2' }
+            ];
+
+            const hostname = window.location.hostname;
+
+            for (const service of services) {
+                try {
+                    // Utiliser une image pour tester la connectivité (contourne CORS)
+                    const img = new Image();
+                    const timeout = setTimeout(() => {
+                        // Service probablement non disponible
+                        markServiceStatus(service.card, false);
+                    }, 3000);
+
+                    img.onload = img.onerror = () => {
+                        clearTimeout(timeout);
+                        // Même en cas d'erreur, cela signifie que le port répond
+                        markServiceStatus(service.card, true);
+                    };
+
+                    img.src = `http://${hostname}:${service.port}/favicon.ico?t=${Date.now()}`;
+                    
+                } catch (error) {
+                    markServiceStatus(service.card, false);
+                }
+            }
+        }
+
+        function markServiceStatus(cardSelector, isAvailable) {
+            const card = document.querySelector(cardSelector);
+            if (card) {
+                const existingIndicator = card.querySelector('.service-status');
+                if (existingIndicator) {
+                    existingIndicator.remove();
+                }
+
+                const indicator = document.createElement('div');
+                indicator.className = 'service-status';
+                indicator.style.cssText = `
+                    position: absolute;
+                    top: 1rem;
+                    right: 1rem;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    background: ${isAvailable ? '#27ae60' : '#e74c3c'};
+                    box-shadow: 0 0 10px ${isAvailable ? '#27ae60' : '#e74c3c'};
+                    animation: pulse 2s infinite;
+                `;
+                
+                card.style.position = 'relative';
+                card.appendChild(indicator);
+            }
+        }
+
+        // Ajouter des effets sonores légers (optionnel, commenté par défaut)
+        /*
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Ici vous pourriez ajouter un petit son de hover
+                // playHoverSound();
+            });
+        });
+        */
+    </script>
+</body>
+</html>

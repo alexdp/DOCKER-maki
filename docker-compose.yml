@@ -1,0 +1,9 @@
+services:
+  iso-builder:
+    container_name: ubuntu-iso-builder
+    build:
+      context: .
+      dockerfile: Dockerfile
+    privileged: true
+    volumes:
+      - ./output:/output
