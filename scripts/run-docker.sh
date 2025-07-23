@@ -1,36 +1,10 @@
 #!/bin/bash
 
+
+# Script pour démarrer les services Docker avec les répertoires de données configurés
+
 set -e
 
-# Préparation de l'environnement Docker
-DOCKER_DATA_ROOT_DIR="/tmp/docker"
-# Trouver un disque monté en écriture (chercher dans /mnt car c'est là que sont montés les disques de données)
-FIRST_MOUNT=$(ls -1 /mnt 2>/dev/null | head -n 1)
-if [ -n "$FIRST_MOUNT" ]; then
-    FIRST_MOUNT="/mnt/$FIRST_MOUNT"
-fi
-
-if [ -z "$FIRST_MOUNT" ] || [ ! -d "$FIRST_MOUNT" ]; then
-    echo "Aucun disque monté en écriture trouvé dans /mnt. Docker utilisera /tmp/docker"
-    # Vérifier si on peut écrire dans /tmp
-    if ! touch /tmp/test_write 2>/dev/null; then
-        echo "Impossible d'écrire dans /tmp, utilisation de /var/lib/docker"
-        DOCKER_DATA_ROOT_DIR="/var/lib/docker"
-    else
-        rm -f /tmp/test_write
-    fi
-else
-    echo "Disque monté en écriture trouvé : $FIRST_MOUNT"
-    # Vérifier si on peut écrire sur ce disque
-    if touch "$FIRST_MOUNT/.test_write" 2>/dev/null; then
-        DOCKER_DATA_ROOT_DIR="$FIRST_MOUNT/.docker"
-        rm -f "$FIRST_MOUNT/.test_write"
-    else
-        echo "Le disque $FIRST_MOUNT n'est pas accessible en écriture, utilisation de /tmp/docker"
-    fi
-fi
-mkdir -p "$DOCKER_DATA_ROOT_DIR"
-chmod 700 "$DOCKER_DATA_ROOT_DIR"
 mkdir -p /etc/docker
 cat > /etc/docker/daemon.json << EOF
 {
@@ -44,7 +18,7 @@ systemctl restart docker
 echo "Docker configuré avec le répertoire de données : $DOCKER_DATA_ROOT_DIR"
 
 
-# Démarrage de Nginx avec Docker
+# Démarrage de Nginx avec Docker (port 80) pour exposer la page web d'accueil
 docker load -i /var/local/docker/nginx-latest.tar || true
 docker rm --force --volumes nginx || true
 docker run -d --name nginx \
@@ -53,7 +27,7 @@ docker run -d --name nginx \
   nginx:latest || true
 
 
-# Démarrage de Portainer avec Docker
+# Démarrage de Portainer avec Docker (port 9000) pour la gestion des conteneurs
 docker load -i /var/local/docker/portainer-latest.tar || true
 docker rm --force --volumes portainer || true
 docker run -d --name portainer \
@@ -64,8 +38,7 @@ docker run -d --name portainer \
   portainer:latest || true
 
 
-# Démarrage de Samba avec Docker
-adduser --system --no-create-home --group smbuser || true
+# Démarrage de Samba avec Docker (port 139 et 445) pour le partage de fichiers
 docker load -i /var/local/docker/samba-latest.tar || true
 mkdir -p /var/local/samba 
 cat > /var/local/samba/smb.conf << EOF
@@ -88,14 +61,14 @@ EOF
 docker rm --force --volumes samba || true
 docker run -d --name samba \
   --network host \
-  -v $FIRST_MOUNT:/mnt \
+  -v $ROOT_DIR:/mnt \
   -v /var/local/samba/smb.conf:/etc/samba/smb.conf \
   samba:latest \
   -u "admin;password" \
   -n || true
 
 
-# Démarrage Filebrowser avec Docker
+# Démarrage Filebrowser avec Docker (port 8080) pour la gestion des fichiers
 mkdir -p /var/local/filebrowser
 cat > /var/local/filebrowser/config.yaml << EOF
 server:
@@ -138,9 +111,8 @@ docker run -d \
   -e FB_PASSWORD=password \
   filebrowser:latest || true
 
-echo "✓ File Browser démarré avec Docker sur le port 8080"
 
-# Démarrage de Jellyfin avec Docker
+# Démarrage de Jellyfin avec Docker (port 8096) pour streamer des vidéos
 docker load -i /var/local/docker/jellyfin-latest.tar || true
 docker rm --force --volumes jellyfin || true
 docker run -d \
@@ -151,11 +123,11 @@ docker run -d \
   -e TZ=Etc/UTC \
   -v jellyfin_config:/config \
   -v jellyfin_cache:/cache \
-  -v /mnt:/media:ro \
+  -v $VIDEOS_DIR:/media:ro \
   jellyfin:latest || true
 
 
-# Démarrage de PiGallery2 avec Docker
+# Démarrage de PiGallery2 avec Docker (port 8082) pour la lecture des photos
 docker load -i /var/local/docker/pigallery2-latest.tar || true
 mkdir -p /var/local/pigallery2 || true
 cat > /var/local/pigallery2/config.json << EOF
@@ -173,14 +145,15 @@ docker rm --force --volumes pigallery2 || true
 docker run -d \
   --name pigallery2 \
   --network host \
-  -v /mnt:/app/data/images:ro \
+  --user $(id -u smbuser):$(id -g smbuser) \
+  -v $PHOTOS_DIR:/app/data/images:ro \
   -v /var/local/pigallery2/config.json:/app/data/config/config.json:ro \
   -v pigallery2_db:/app/data/db \
   pigallery2:latest || true
 
 
 
-# Démarrage de Immich avec Docker
+# Démarrage de Immich avec Docker (port 8088) pour la gestion des photos
 docker load -i /var/local/docker/immich-latest.tar || true
 docker load -i /var/local/docker/immich-valkey-latest.tar || true
 docker load -i /var/local/docker/immich-postgres-latest.tar || true
@@ -212,7 +185,7 @@ docker run -d --name immich \
   -e REDIS_HOSTNAME=localhost \
   -e SERVER_HOST=0.0.0.0 \
   -e SERVER_PORT=8088 \
-  -v $FIRST_MOUNT:/photos \
+  -v $PHOTOS_DIR:/photos \
   immich:latest || true
 
   
