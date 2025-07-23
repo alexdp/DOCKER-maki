@@ -235,6 +235,11 @@
             border-left: 4px solid #e74c3c;
             background: linear-gradient(145deg, rgba(231, 76, 60, 0.1), rgba(255,255,255,0.95));
         }
+        
+        .immich { 
+            border-left: 4px solid #4285f4;
+            background: linear-gradient(145deg, rgba(66, 133, 244, 0.1), rgba(255,255,255,0.95));
+        }
 
         .floating-particles {
             position: fixed;
@@ -305,6 +310,13 @@
                 <h3>PiGallery2</h3>
                 <p>Galerie photo intelligente avec reconnaissance faciale, géolocalisation et tri automatique</p>
                 <span class="service-port">Port 8082</span>
+            </a>
+
+            <a href="http://[IP]:8088" class="service-card immich" target="_blank">
+                <span class="service-icon">📷</span>
+                <h3>Immich</h3>
+                <p>Solution moderne de sauvegarde et gestion de photos avec intelligence artificielle et synchronisation mobile</p>
+                <span class="service-port">Port 8088</span>
             </a>
         </div>
 
@@ -449,7 +461,8 @@
                 { port: 9000, card: '.portainer', name: 'Portainer' },
                 { port: 8080, card: '.filebrowser', name: 'File Browser' },
                 { port: 8096, card: '.jellyfin', name: 'Jellyfin' },
-                { port: 8082, card: '.pigallery', name: 'PiGallery2' }
+                { port: 8082, card: '.pigallery', name: 'PiGallery2' },
+                { port: 8088, card: '.immich', name: 'Immich' }
             ];
 
             const hostname = window.location.hostname;
