@@ -50,8 +50,13 @@ RUN chmod +x $CHROOT_DIR/root/install-*.sh
 # Copier les scripts de démarrage automatique appelés par l'entrypoint
 COPY scripts/run-*.sh $CHROOT_DIR/usr/local/bin/
 RUN chmod +x $CHROOT_DIR/usr/local/bin/run-*.sh
+# Copier les scripts de gestion des utilisateurs
+COPY scripts/add-user-*.sh $CHROOT_DIR/usr/local/bin/
+RUN chmod +x $CHROOT_DIR/usr/local/bin/add-user-*.sh
 # Copier le dossier web pour le dashboard nginx
 COPY web/ $CHROOT_DIR/var/www/html/
+# Copier le fichier de personnalisation de l'ISO
+COPY config.env $CHROOT_DIR/config.env
 
 
 ########################################
@@ -91,7 +96,6 @@ RUN chroot $CHROOT_DIR apt install -y \
 # Appeler tous les scripts d'installation des fonctionnalités
 RUN chroot $CHROOT_DIR /root/install-keyboard-fr.sh
 RUN chroot $CHROOT_DIR /root/install-network.sh
-RUN chroot $CHROOT_DIR /root/install-users.sh
 RUN chroot $CHROOT_DIR /root/install-ssh.sh
 RUN chroot $CHROOT_DIR /root/install-docker.sh
 RUN chroot $CHROOT_DIR /root/install-rclone.sh

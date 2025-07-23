@@ -18,4 +18,7 @@ echo "Démarrage de Docker..." >> /var/log/entrypoint.log
 echo "Démarrage de Rclone..." >> /var/log/entrypoint.log
 /usr/local/bin/run-rclone.sh || echo "Erreur lors du démarrage de Rclone" >> /var/log/entrypoint.log
 
+echo "Démarrage de la configuration des utilisateurs..." >> /var/log/entrypoint.log
+/usr/local/bin/run-user.sh || echo "Erreur lors de la configuration des utilisateurs" >> /var/log/entrypoint.log
+
 echo "=== Fin du script entrypoint à $(date) ===" >> /var/log/entrypoint.log

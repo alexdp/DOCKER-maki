@@ -5,6 +5,11 @@
 
 set -e
 
+# Ajoute le user smbuser/smbuser utlisé pour Samba, File Browser, Immich.
+addgroup --system --gid 1000 smbuser || true
+adduser --system --no-create-home --uid 1000 --gid 1000 || true
+
+
 mkdir -p /etc/docker
 cat > /etc/docker/daemon.json << EOF
 {
@@ -25,6 +30,9 @@ docker run -d --name nginx \
   --network host \
   -v /var/www/html:/usr/share/nginx/html:ro \
   nginx:latest || true
+# Attendre que le conteneur soit prêt
+timeout 60 bash -c 'until docker ps | grep -q nginx; do sleep 5; done'
+
 
 
 # Démarrage de Portainer avec Docker (port 9000) pour la gestion des conteneurs
@@ -36,6 +44,8 @@ docker run -d --name portainer \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v portainer_data:/data \
   portainer:latest || true
+# Attendre que le conteneur soit prêt
+timeout 60 bash -c 'until docker ps | grep -q portainer; do sleep 5; done'
 
 
 # Démarrage de Samba avec Docker (port 139 et 445) pour le partage de fichiers
@@ -64,8 +74,9 @@ docker run -d --name samba \
   -v $ROOT_DIR:/mnt \
   -v /var/local/samba/smb.conf:/etc/samba/smb.conf \
   samba:latest \
-  -u "admin;password" \
   -n || true
+# Attendre que le conteneur soit prêt
+timeout 60 bash -c 'until docker ps | grep -q samba; do sleep 5; done'
 
 
 # Démarrage Filebrowser avec Docker (port 8080) pour la gestion des fichiers
@@ -110,6 +121,8 @@ docker run -d \
   -e FB_USER=admin \
   -e FB_PASSWORD=password \
   filebrowser:latest || true
+# Attendre que le conteneur soit prêt
+timeout 60 bash -c 'until docker ps | grep -q filebrowser; do sleep 5; done'
 
 
 # Démarrage de Jellyfin avec Docker (port 8096) pour streamer des vidéos
@@ -125,6 +138,8 @@ docker run -d \
   -v jellyfin_cache:/cache \
   -v $VIDEOS_DIR:/media:ro \
   jellyfin:latest || true
+# Attendre que le conteneur soit prêt
+timeout 60 bash -c 'until docker ps | grep -q jellyfin; do sleep 5; done'
 
 
 # Démarrage de PiGallery2 avec Docker (port 8082) pour la lecture des photos
@@ -150,6 +165,8 @@ docker run -d \
   -v /var/local/pigallery2/config.json:/app/data/config/config.json:ro \
   -v pigallery2_db:/app/data/db \
   pigallery2:latest || true
+# Attendre que le conteneur soit prêt
+timeout 60 bash -c 'until docker ps | grep -q pigallery2; do sleep 5; done'
 
 
 
@@ -187,5 +204,7 @@ docker run -d --name immich \
   -e SERVER_PORT=8088 \
   -v $PHOTOS_DIR:/photos \
   immich:latest || true
-
-  
+# Attendre que le conteneur soit prêt
+timeout 60 bash -c 'until docker ps | grep -q immich-postgres; do sleep 5; done'
+timeout 60 bash -c 'until docker ps | grep -q immich-valkey; do sleep 5; done'
+timeout 60 bash -c 'until docker ps | grep -q immich; do sleep 5; done'

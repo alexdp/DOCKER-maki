@@ -26,11 +26,11 @@ else
 fi
 
 export ROOT_DIR="$FIRST_MOUNT"
-export PHOTOS_DIR="$FIRST_MOUNT/photos"
-export VIDEOS_DIR="$FIRST_MOUNT/videos"
-export FILES_DIR="$FIRST_MOUNT/files"
-export DOCKER_DATA_ROOT_DIR="$FIRST_MOUNT/.docker"
-export RCLONE_DIR="$FIRST_MOUNT/.rclone"
+export PHOTOS_DIR="$ROOT_DIR/photos"
+export VIDEOS_DIR="$ROOT_DIR/videos"
+export FILES_DIR="$ROOT_DIR/files"
+export DOCKER_DATA_ROOT_DIR="$ROOT_DIR/.docker"
+export RCLONE_DIR="$ROOT_DIR/.rclone"
 
 
 mkdir -p "$PHOTOS_DIR"
