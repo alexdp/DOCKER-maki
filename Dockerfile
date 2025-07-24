@@ -67,7 +67,7 @@ COPY config.env $CHROOT_DIR/config.env
 #RUN mount --bind /dev $CHROOT_DIR/dev
 RUN chroot $CHROOT_DIR apt-get update && apt-get install -y software-properties-common
 # RUN chroot $CHROOT_DIR apt update && add-apt-repository -y universe && apt update
-RUN chroot $CHROOT_DIR apt install -y \
+RUN chroot $CHROOT_DIR apt update && add-apt-repository -y universe && apt update && apt install -y \
     # Installation des paquets essentiels pour un live system
     software-properties-common \
     initramfs-tools \
