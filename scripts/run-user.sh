@@ -13,11 +13,13 @@ set -e
 #   USER2=user2,password2
 CONFIG_FILE="/config.env"
 
-# Vérifier que le fichier existe
-[ -f "$CONFIG_FILE" ] || { echo "Fichier $CONFIG_FILE introuvable"; exit 1; }
-
 # Charger les variables de configuration
-source "$CONFIG_FILE"
+if  [ -f "$CONFIG_FILE" ]; then
+    dos2unix /config.env
+    source "$CONFIG_FILE"
+else
+    echo "Fichier $CONFIG_FILE introuvable. Aucun utilisateur ne sera créé."
+fi
 
 # Récupérer toutes les variables d'environnement commençant par USER
 vars=$(set | grep -E '^(USER[0-9]+)=' | cut -d= -f1)

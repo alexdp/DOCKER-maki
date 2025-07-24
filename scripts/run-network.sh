@@ -3,8 +3,16 @@
 # Configurer le hostname
 echo "Configuration du hostname..."
 
-# Nom d'hôte à envoyer
-HOSTNAME="nas"
+# Charger les variables de configuration contenant le nom d'hôte
+CONFIG_FILE="/config.env"
+if  [ -f "$CONFIG_FILE" ]; then
+    dos2unix /config.env
+    source "$CONFIG_FILE"
+else
+    echo "Fichier $CONFIG_FILE introuvable, utilisation du nom d'hôte par défaut 'nas'."
+    HOSTNAME="nas"
+fi
+
 
 # Interface(s) à configurer
 INTERFACES=$(ip -o link show | awk -F': ' '/state UP/ && !/lo/ {print $2}')

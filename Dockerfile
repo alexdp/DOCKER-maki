@@ -85,8 +85,9 @@ RUN chroot $CHROOT_DIR apt install -y \
     vim \
     htop \
     net-tools \
-    iputils-ping
-
+    iputils-ping \
+    # Installation des paquets pour la lecture du config.env
+    dos2unix
 
 ################################################
 #                                              #
