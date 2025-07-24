@@ -6,8 +6,7 @@
 set -e
 
 # Ajoute le user smbuser/smbuser utlisé pour Samba, File Browser, Immich.
-addgroup --system --gid 1000 smbuser || true
-adduser --system --no-create-home --uid 1000 --gid 1000 || true
+adduser --system --no-create-home --group smbuser > /dev/null
 
 
 mkdir -p /etc/docker
@@ -24,32 +23,30 @@ echo "Docker configuré avec le répertoire de données : $DOCKER_DATA_ROOT_DIR"
 
 
 # Démarrage de Nginx avec Docker (port 80) pour exposer la page web d'accueil
-docker load -i /var/local/docker/nginx-latest.tar || true
-docker rm --force --volumes nginx || true
+docker load -i /var/local/docker/nginx-latest.tar
+docker rm --force --volumes nginx > /dev/null
 docker run -d --name nginx \
   --network host \
   -v /var/www/html:/usr/share/nginx/html:ro \
-  nginx:latest || true
-# Attendre que le conteneur soit prêt
+  nginx:latest && \
 timeout 60 bash -c 'until docker ps | grep -q nginx; do sleep 5; done'
 
 
 
 # Démarrage de Portainer avec Docker (port 9000) pour la gestion des conteneurs
-docker load -i /var/local/docker/portainer-latest.tar || true
-docker rm --force --volumes portainer || true
+docker load -i /var/local/docker/portainer-latest.tar
+docker rm --force --volumes portainer > /dev/null
 docker run -d --name portainer \
   --network host \
   --restart always \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v portainer_data:/data \
-  portainer:latest || true
-# Attendre que le conteneur soit prêt
+  portainer:latest && \
 timeout 60 bash -c 'until docker ps | grep -q portainer; do sleep 5; done'
 
 
 # Démarrage de Samba avec Docker (port 139 et 445) pour le partage de fichiers
-docker load -i /var/local/docker/samba-latest.tar || true
+docker load -i /var/local/docker/samba-latest.tar
 mkdir -p /var/local/samba 
 cat > /var/local/samba/smb.conf << EOF
 [global]
@@ -68,14 +65,13 @@ cat > /var/local/samba/smb.conf << EOF
    create mask = 0666
    create directory = 0777
 EOF
-docker rm --force --volumes samba || true
+docker rm --force --volumes samba > /dev/null
 docker run -d --name samba \
   --network host \
   -v $ROOT_DIR:/mnt \
   -v /var/local/samba/smb.conf:/etc/samba/smb.conf \
   samba:latest \
-  -n || true
-# Attendre que le conteneur soit prêt
+  -n && \
 timeout 60 bash -c 'until docker ps | grep -q samba; do sleep 5; done'
 
 
@@ -108,26 +104,25 @@ userDefaults:
     share: false
     api: false
 EOF
-docker load -i /var/local/docker/filebrowser-latest.tar || true
-docker rm --force --volumes filebrowser || true
+docker load -i /var/local/docker/filebrowser-latest.tar
+docker rm --force --volumes filebrowser > /dev/null
 docker run -d \
   --name filebrowser \
   --network host \
   -v filebrowser_data:/database \
   -v /var/local/filebrowser/config.yaml:/home/filebrowser/config.yaml \
-  -v $FIRST_MOUNT:/srv \
+  -v $ROOT_DIR:/srv \
   -e PUID=$(id -u smbuser) \
   -e PGID=$(id -g smbuser) \
   -e FB_USER=admin \
   -e FB_PASSWORD=password \
-  filebrowser:latest || true
-# Attendre que le conteneur soit prêt
+  filebrowser:latest && \
 timeout 60 bash -c 'until docker ps | grep -q filebrowser; do sleep 5; done'
 
 
 # Démarrage de Jellyfin avec Docker (port 8096) pour streamer des vidéos
-docker load -i /var/local/docker/jellyfin-latest.tar || true
-docker rm --force --volumes jellyfin || true
+docker load -i /var/local/docker/jellyfin-latest.tar
+docker rm --force --volumes jellyfin > /dev/null
 docker run -d \
   --name=jellyfin \
   --network host \
@@ -137,14 +132,14 @@ docker run -d \
   -v jellyfin_config:/config \
   -v jellyfin_cache:/cache \
   -v $VIDEOS_DIR:/media:ro \
-  jellyfin:latest || true
+  jellyfin:latest && \
 # Attendre que le conteneur soit prêt
 timeout 60 bash -c 'until docker ps | grep -q jellyfin; do sleep 5; done'
 
 
 # Démarrage de PiGallery2 avec Docker (port 8082) pour la lecture des photos
-docker load -i /var/local/docker/pigallery2-latest.tar || true
-mkdir -p /var/local/pigallery2 || true
+docker load -i /var/local/docker/pigallery2-latest.tar
+mkdir -p /var/local/pigallery2 > /dev/null
 cat > /var/local/pigallery2/config.json << EOF
 {
   "Server": {
@@ -156,7 +151,7 @@ cat > /var/local/pigallery2/config.json << EOF
   }
 }
 EOF
-docker rm --force --volumes pigallery2 || true
+docker rm --force --volumes pigallery2 > /dev/null
 docker run -d \
   --name pigallery2 \
   --network host \
@@ -164,33 +159,35 @@ docker run -d \
   -v $PHOTOS_DIR:/app/data/images:ro \
   -v /var/local/pigallery2/config.json:/app/data/config/config.json:ro \
   -v pigallery2_db:/app/data/db \
-  pigallery2:latest || true
+  pigallery2:latest && \
 # Attendre que le conteneur soit prêt
 timeout 60 bash -c 'until docker ps | grep -q pigallery2; do sleep 5; done'
 
 
 
 # Démarrage de Immich avec Docker (port 8088) pour la gestion des photos
-docker load -i /var/local/docker/immich-latest.tar || true
-docker load -i /var/local/docker/immich-valkey-latest.tar || true
-docker load -i /var/local/docker/immich-postgres-latest.tar || true
-docker rm --force --volumes immich || true
-docker rm --force --volumes immich-valkey || true
-docker rm --force immich-postgres || true
+docker load -i /var/local/docker/immich-latest.tar
+docker load -i /var/local/docker/immich-valkey-latest.tar
+docker load -i /var/local/docker/immich-postgres-latest.tar
+docker rm --force --volumes immich > /dev/null
+docker rm --force --volumes immich-valkey > /dev/null
+docker rm --force immich-postgres > /dev/null
 docker run -d --name immich-postgres \
   --network host \
   -e POSTGRES_USER=immich \
   -e POSTGRES_PASSWORD=immich \
   -e POSTGRES_DB=immich \
   -v immich_postgres_data:/var/lib/postgresql/data \
-  immich-postgres:latest || true
+  immich-postgres:latest && \
+timeout 60 bash -c 'until docker ps | grep -q immich-postgres; do sleep 5; done'
 docker run -d --name immich-valkey \
   --network host \
   -e VALKEY_PASSWORD=immich \
   -e VALKEY_DATABASE=immich \
   -e VALKEY_PORT=6379 \
   -v immich_valkey_data:/data \
-  immich-valkey:latest || true
+  immich-valkey:latest && \
+timeout 60 bash -c 'until docker ps | grep -q immich-valkey; do sleep 5; done'
 docker run -d --name immich \
   --network host \
   -e PUID=$(id -u smbuser) \
@@ -203,8 +200,6 @@ docker run -d --name immich \
   -e SERVER_HOST=0.0.0.0 \
   -e SERVER_PORT=8088 \
   -v $PHOTOS_DIR:/photos \
-  immich:latest || true
-# Attendre que le conteneur soit prêt
-timeout 60 bash -c 'until docker ps | grep -q immich-postgres; do sleep 5; done'
-timeout 60 bash -c 'until docker ps | grep -q immich-valkey; do sleep 5; done'
+  immich:latest && \
 timeout 60 bash -c 'until docker ps | grep -q immich; do sleep 5; done'
+

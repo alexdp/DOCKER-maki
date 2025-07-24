@@ -2,8 +2,7 @@
 
 # Configuration réseau avec hostname "nas"
 
-apt update && apt install -y systemd-networkd systemd-resolved isc-dhcp-client || true
-apt install -y iproute2 iputils-ping net-tools dnsutils traceroute curl wget || true
+apt update && apt install -y systemd-resolved isc-dhcp-client || true
 
 
 # Configuration du réseau en DHCP

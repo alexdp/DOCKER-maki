@@ -12,16 +12,15 @@ fi
 
 if [ -z "$FIRST_MOUNT" ] || [ ! -d "$FIRST_MOUNT" ]; then
     echo "Aucun disque monté trouvé dans /mnt"
-    exit 1
+    $FIRST_MOUNT=/tmp
+    echo "Utilisation du répertoire temporaire : $FIRST_MOUNT"
 else
     echo "Disque monté en écriture trouvé : $FIRST_MOUNT"
     # Vérifier si on peut écrire sur ce disque
     if touch "$FIRST_MOUNT/.test_write" 2>/dev/null; then
-        DOCKER_DATA_ROOT_DIR="$FIRST_MOUNT/.docker"
         rm -f "$FIRST_MOUNT/.test_write"
     else
         echo "Le disque $FIRST_MOUNT n'est pas accessible en écriture"
-        exit 1
     fi
 fi
 
@@ -43,10 +42,11 @@ chmod 777 "$VIDEOS_DIR"
 chmod 777 "$FILES_DIR"
 chmod 700 "$DOCKER_DATA_ROOT_DIR"
 chmod 777 "$RCLONE_DIR"
-chown -R smbuser:smbuser "$PHOTOS_DIR"
-chown -R smbuser:smbuser "$VIDEOS_DIR"
-chown -R smbuser:smbuser "$FILES_DIR"
-chown -R root:root "$RCLONE_DIR"
-chown -R root:root "$DOCKER_DATA_ROOT_DIR"
+
+adduser --system --no-create-home --group smbuser > /dev/null || true
+chown smbuser:smbuser "$ROOT_DIR"
+chown smbuser:smbuser "$PHOTOS_DIR"
+chown smbuser:smbuser "$VIDEOS_DIR"
+chown smbuser:smbuser "$FILES_DIR"
 
 
