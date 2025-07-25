@@ -64,15 +64,9 @@ COPY config.env $CHROOT_DIR/config.env
 # installation des paquets dans l'ISO  #
 #                                      #
 ########################################
-#RUN mount --bind /dev $CHROOT_DIR/dev
-RUN chroot $CHROOT_DIR apt-get update && apt-get install -y \
-    # Ajoute la commande add-apt-repository
-    software-properties-common
-RUN chroot $CHROOT_DIR apt update && add-apt-repository -y universe && apt update && apt install -y \
-    # Ajoute le paquet dos2unix pour la lecture du config.env
-    dos2unix
-RUN chroot $CHROOT_DIR apt update && apt install -y \
-    # Installation des paquets essentiels pour un live system
+# Installation des paquets essentiels pour un live system
+RUN chroot $CHROOT_DIR apt update && chroot $CHROOT_DIR apt install -y \
+    software-properties-common \
     initramfs-tools \
     casper \
     linux-image-generic \
@@ -80,8 +74,9 @@ RUN chroot $CHROOT_DIR apt update && apt install -y \
     linux-tools-virtual \
     linux-cloud-tools-virtual \
     laptop-detect \
-    os-prober \
-    # Installation des outils de base pour serveur
+    os-prober
+# Installation des outils de base pour serveur
+RUN chroot $CHROOT_DIR apt install -y \
     curl \
     wget \
     nano \
@@ -89,6 +84,10 @@ RUN chroot $CHROOT_DIR apt update && apt install -y \
     htop \
     net-tools \
     iputils-ping
+# Ajoute le paquet dos2unix pour la lecture du config.env
+RUN chroot $CHROOT_DIR add-apt-repository -y universe && \
+    chroot $CHROOT_DIR apt update && \
+    chroot $CHROOT_DIR apt install -y dos2unix
 
 ################################################
 #                                              #

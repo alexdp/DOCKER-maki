@@ -11,7 +11,7 @@ Ce projet permet de générer automatiquement une image ISO Ubuntu 24.04 (Noble)
 
 ## Lancer le build
 
-- Avec cache de build : docker compose build && docker compose up
-- Sans cache de build : docker compose up -build
+DOCKER_BUILDKIT=0 docker compose build && docker compose up
+
 
 L'image ISO se trouve dans le répertoire output

@@ -27,7 +27,7 @@ fi
 export ROOT_DIR="$FIRST_MOUNT"
 export PHOTOS_DIR="$ROOT_DIR/photos"
 export VIDEOS_DIR="$ROOT_DIR/videos"
-export FILES_DIR="$ROOT_DIR/files"
+export FILES_DIR="$ROOT_DIR/bureautique"
 export DOCKER_DATA_ROOT_DIR="$ROOT_DIR/.docker"
 export RCLONE_DIR="$ROOT_DIR/.rclone"
 
