@@ -65,11 +65,14 @@ COPY config.env $CHROOT_DIR/config.env
 #                                      #
 ########################################
 #RUN mount --bind /dev $CHROOT_DIR/dev
-RUN chroot $CHROOT_DIR apt-get update && apt-get install -y software-properties-common
-# RUN chroot $CHROOT_DIR apt update && add-apt-repository -y universe && apt update
+RUN chroot $CHROOT_DIR apt-get update && apt-get install -y \
+    # Ajoute la commande add-apt-repository
+    software-properties-common
 RUN chroot $CHROOT_DIR apt update && add-apt-repository -y universe && apt update && apt install -y \
+    # Ajoute le paquet dos2unix pour la lecture du config.env
+    dos2unix
+RUN chroot $CHROOT_DIR apt update && apt install -y \
     # Installation des paquets essentiels pour un live system
-    software-properties-common \
     initramfs-tools \
     casper \
     linux-image-generic \
@@ -85,9 +88,7 @@ RUN chroot $CHROOT_DIR apt update && add-apt-repository -y universe && apt updat
     vim \
     htop \
     net-tools \
-    iputils-ping \
-    # Installation des paquets pour la lecture du config.env
-    dos2unix
+    iputils-ping
 
 ################################################
 #                                              #
