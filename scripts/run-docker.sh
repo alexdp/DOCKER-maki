@@ -3,7 +3,7 @@
 
 # Script pour démarrer les services Docker avec les répertoires de données configurés
 
-set -e
+
 
 # Ajoute le user smbuser/smbuser utlisé pour Samba, File Browser, Immich.
 adduser --system --no-create-home --group smbuser > /dev/null

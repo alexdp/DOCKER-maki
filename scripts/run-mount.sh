@@ -2,7 +2,7 @@
 
 # Script pour monter toutes les partitions de tous les disques
 
-set -e
+
 
 # Créer le répertoire de logs s'il n'existe pas
 mkdir -p /var/log/mount

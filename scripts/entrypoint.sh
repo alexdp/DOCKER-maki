@@ -21,4 +21,7 @@ echo "Démarrage de Rclone..." >> /var/log/entrypoint.log
 echo "Démarrage de la configuration des utilisateurs..." >> /var/log/entrypoint.log
 /usr/local/bin/run-user.sh || echo "Erreur lors de la configuration des utilisateurs" >> /var/log/entrypoint.log
 
+echo "Démarrage de la configuration des sauvegardes..." >> /var/log/entrypoint.log
+/usr/local/bin/run-backup.sh || echo "Erreur lors de la configuration des sauvegardes" >> /var/log/entrypoint.log
+
 echo "=== Fin du script entrypoint à $(date) ===" >> /var/log/entrypoint.log

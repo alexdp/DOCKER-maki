@@ -1,6 +1,5 @@
 #!/bin/bash
 
-set -e
 
 # Script pour créer les répertoires nécessaires (fichiers, photos, vidéos, volumes Docker)
 

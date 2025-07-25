@@ -83,7 +83,9 @@ RUN chroot $CHROOT_DIR apt install -y \
     vim \
     htop \
     net-tools \
-    iputils-ping
+    iputils-ping \
+    cron \
+    rsync
 # Ajoute le paquet dos2unix pour la lecture du config.env
 RUN chroot $CHROOT_DIR add-apt-repository -y universe && \
     chroot $CHROOT_DIR apt update && \
