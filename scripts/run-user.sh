@@ -2,8 +2,6 @@
 
 # Script de création des utilisateurs
 
-set -e
-
 
 # Les utilisateurs sont définis dans un fichier de configuration
 # Chaque ligne doit être au format USERn=login,password

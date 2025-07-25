@@ -2,8 +2,6 @@
 
 # Script pour préparer la configuration de Rclone
 
-set -e
-
 
 # Déclarer la variable d'environnement pour le fichier de configuration rclone
 cat > /etc/profile.d/rclone.sh << EOF
