@@ -4,9 +4,9 @@
 echo "Configuration du hostname..."
 
 # Charger les variables de configuration contenant le nom d'hôte
-CONFIG_FILE="/config.env"
+CONFIG_FILE="$ROOT_DIR/config.env"
 if  [ -f "$CONFIG_FILE" ]; then
-    dos2unix /config.env
+    dos2unix "$CONFIG_FILE"
     source "$CONFIG_FILE"
 else
     echo "Fichier $CONFIG_FILE introuvable, utilisation du nom d'hôte par défaut 'nas'."

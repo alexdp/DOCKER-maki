@@ -2,10 +2,10 @@
 
 # Script pour gérer les copies et mirroir de données
 
-CONFIG_FILE="/config.env"
+CONFIG_FILE="$ROOT_DIR/config.env"
 # Charger les variables de configuration
 if  [ -f "$CONFIG_FILE" ]; then
-    dos2unix /config.env
+    dos2unix "$CONFIG_FILE"
     source "$CONFIG_FILE"
 else
     echo "Fichier $CONFIG_FILE introuvable. Aucun utilisateur ne sera créé."

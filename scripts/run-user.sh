@@ -9,11 +9,11 @@
 # Exemple :
 #   USER1=user1,password1
 #   USER2=user2,password2
-CONFIG_FILE="/config.env"
+CONFIG_FILE="$ROOT_DIR/config.env"
 
 # Charger les variables de configuration
 if  [ -f "$CONFIG_FILE" ]; then
-    dos2unix /config.env
+    dos2unix "$CONFIG_FILE"
     source "$CONFIG_FILE"
 else
     echo "Fichier $CONFIG_FILE introuvable. Aucun utilisateur ne sera créé."
