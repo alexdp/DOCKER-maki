@@ -3,8 +3,8 @@
 # Configuration réseau avec hostname "nas"
 
 DEBIAN_FRONTEND=noninteractive
-apt update && apt install -y systemd-networkd systemd-resolved isc-dhcp-client || true
-apt install -y iproute2 iputils-ping net-tools dnsutils traceroute curl wget || true
+apt update && apt install -y -o Dpkg::Options::="--force-confdef" isc-dhcp-client || true
+apt install -y systemd-resolved iproute2 iputils-ping net-tools dnsutils traceroute curl wget || true
 
 
 # Configuration du réseau en DHCP
@@ -20,7 +20,6 @@ EOF
 # Configuration DNS 
 echo "Configuration DNS..."
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
-systemctl enable systemd-networkd
 systemctl enable systemd-resolved
 
 echo "Configuration réseau terminée"

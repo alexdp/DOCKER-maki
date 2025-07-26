@@ -55,6 +55,16 @@ cat > /var/local/samba/smb.conf << EOF
    security = user
    workgroup = WORKGROUP
    
+   # Optimisations simples pour le débit
+   min protocol = SMB2       # désactive SMB1, plus rapide et sûr
+   max protocol = SMB3
+   use sendfile = yes        # accélère le transfert de gros fichiers
+   socket options = TCP_NODELAY SO_RCVBUF=512000 SO_SNDBUF=512000
+
+   # Désactive le chiffrement/signature (max débit en LAN, mais moins sécurisé)
+   server signing = no
+   smb encrypt = off
+
 [public]
    comment = Public Share - Linux Users Only
    path = /mnt

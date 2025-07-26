@@ -9,8 +9,8 @@ if  [ -f "$CONFIG_FILE" ]; then
     dos2unix "$CONFIG_FILE"
     source "$CONFIG_FILE"
 else
-    echo "Fichier $CONFIG_FILE introuvable, utilisation du nom d'hôte par défaut 'nas'."
-    HOSTNAME="nas"
+    echo "Fichier $CONFIG_FILE introuvable, utilisation du nom d'hôte par défaut 'maki'."
+    HOSTNAME="maki"
 fi
 
 

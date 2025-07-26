@@ -16,7 +16,8 @@ if  [ -f "$CONFIG_FILE" ]; then
     dos2unix "$CONFIG_FILE"
     source "$CONFIG_FILE"
 else
-    echo "Fichier $CONFIG_FILE introuvable. Aucun utilisateur ne sera créé."
+    echo "Fichier $CONFIG_FILE introuvable. Utilisateur par défaut créé."
+    USER1="admin,password"
 fi
 
 # Récupérer toutes les variables d'environnement commençant par USER
