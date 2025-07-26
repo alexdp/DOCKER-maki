@@ -20,6 +20,7 @@ EOF
 # Configuration DNS 
 echo "Configuration DNS..."
 ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+systemctl enable systemd-networkd
 systemctl enable systemd-resolved
 
 echo "Configuration réseau terminée"
