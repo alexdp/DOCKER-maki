@@ -1,0 +1,14 @@
+[Unit]
+Description=Load USB config into /etc/environment and /run/config.env
+After=local-fs.target
+Before=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/load-usb-config.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

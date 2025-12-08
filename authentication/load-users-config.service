@@ -1,0 +1,15 @@
+[Unit]
+Description=Create users from /run/config.json
+After=load-usb-config.service load-ldap-config.service
+Requires=load-usb-config.service load-ldap-config.service
+ConditionPathExists=/run/config.json
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/load-users-config.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

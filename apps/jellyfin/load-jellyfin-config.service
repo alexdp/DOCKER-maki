@@ -1,0 +1,14 @@
+[Unit]
+Description=Injecte la configuration de stockage de Jellyfin avant démarrage du service Jellyfin
+Before=jellyfin.service
+After=network.target load-usb-config.service
+Requires=load-usb-config.service
+ConditionPathExists=/run/config.env
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/load-jellyfin-config.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

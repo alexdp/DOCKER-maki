@@ -1,0 +1,12 @@
+[Unit]
+Description=Injecte le chemin du partage public Samba dans le smb.conf avant démarrage des services Samba
+Before=smbd.service nmbd.service winbind.service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/load-samba-config.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

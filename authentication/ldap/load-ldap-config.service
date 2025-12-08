@@ -1,0 +1,12 @@
+[Unit]
+Description=Initialize LDAP directory after slapd startup
+After=slapd.service
+Requires=slapd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/load-ldap-config.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

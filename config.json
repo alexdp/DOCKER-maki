@@ -1,0 +1,11 @@
+{
+  "hostname": "maki",
+  "storage": {
+    "location": "auto"
+  },
+  "users": [
+    {"name": "admin", "password": "admin", "admin": true},
+    {"name": "guest", "password": "guest"},
+    {"name": "ubuntu", "admin": true}
+  ]
+}

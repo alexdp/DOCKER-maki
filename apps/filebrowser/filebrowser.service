@@ -1,0 +1,13 @@
+[Unit]
+Description=File Browser
+After=network.target load-usb-config.service
+Requires=load-usb-config.service
+ConditionPathExists=/run/config.env
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/launch-filebrowser.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

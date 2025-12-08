@@ -1,0 +1,19 @@
+dn: cn=config
+changetype: modify
+replace: olcLogLevel
+olcLogLevel: stats
+
+dn: cn=config
+changetype: modify
+replace: olcArgsFile
+olcArgsFile: /var/run/slapd/slapd.args
+
+dn: cn=config
+changetype: modify
+replace: olcPidFile
+olcPidFile: /var/run/slapd/slapd.pid
+
+dn: cn=config
+changetype: modify
+replace: olcServerID
+olcServerID: 1

@@ -1,0 +1,34 @@
+# Configuration SSH pour NAS Ubuntu Live
+Port 22
+Protocol 2
+
+# Authentification
+PermitRootLogin no
+PasswordAuthentication yes
+
+# Sécurité
+TCPKeepAlive yes
+MaxAuthTries 3
+MaxSessions 10
+ClientAliveInterval 60
+ClientAliveCountMax 3
+
+# Restrictions réseau
+AddressFamily any
+ListenAddress 0.0.0.0
+ListenAddress ::
+UseDNS no
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Subsystèmes
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+
+# Autres options de sécurité
+X11Forwarding yes
+AllowTcpForwarding yes
+GatewayPorts no
+PermitTunnel no

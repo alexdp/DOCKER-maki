@@ -1,0 +1,12 @@
+dn: dc=domain,dc=lan
+objectClass: top
+objectClass: domain
+dc: domain
+
+dn: ou=Users,dc=domain,dc=lan
+objectClass: organizationalUnit
+ou: Users
+
+dn: ou=Groups,dc=domain,dc=lan
+objectClass: organizationalUnit
+ou: Groups

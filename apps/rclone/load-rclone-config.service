@@ -1,0 +1,13 @@
+[Unit]
+Description=Charge la configuration de Rclone pour le montage des volumes cloud (Google Drive, Onedrive...)
+After=network.target load-usb-config.service
+Requires=load-usb-config.service
+ConditionPathExists=/run/config.env
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/load-rclone-config.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

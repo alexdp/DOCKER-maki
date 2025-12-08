@@ -1,0 +1,13 @@
+[Unit]
+Description=Injecte la configuration de PiGallery2 et démarre PiGallery2
+After=network.target load-usb-config.service
+Requires=load-usb-config.service
+ConditionPathExists=/run/config.env
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/launch-pigallery2.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

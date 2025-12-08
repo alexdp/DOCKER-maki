@@ -1,0 +1,9 @@
+[Unit]
+Description=Socat TCP Forwarding pour Rclone qui n'écoute que sur le 127.0.0.1
+
+[Service]
+ExecStart=/usr/bin/socat TCP-LISTEN:53683,fork,reuseaddr TCP:127.0.0.1:53682
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

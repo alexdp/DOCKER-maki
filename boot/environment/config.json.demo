@@ -1,0 +1,19 @@
+{
+  "hostname": "maki",
+  "network": {
+    "interface": "eth0",
+    "type": "ethernet",
+    "ssid": "MonReseauWiFi",
+    "psk": "motdepassewifi",
+    "dhcp": "false",
+    "static": {
+      "address": "192.168.1.85",
+      "netmask": "255.255.255.0",
+      "gateway": "192.168.1.1"
+    }
+  },
+  "users": [
+    {"name": "alexdp", "password": "password", "groups": ["sudo", "users"]},
+    {"name": "ubuntu", "groups": ["sudo"]}
+  ]
+}

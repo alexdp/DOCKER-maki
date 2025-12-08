@@ -1,0 +1,12 @@
+[Unit]
+Description=Kopia
+After=network.target load-usb-config.service
+Requires=load-usb-config.service
+ConditionPathExists=/run/config.env
+
+[Service]
+ExecStart=/usr/local/bin/launch-kopia.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

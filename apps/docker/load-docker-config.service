@@ -1,0 +1,16 @@
+[Unit]
+Description=Apply docker configuration from /run/config.env
+After=load-usb-config.service mount-all-disks.service
+Before=network-pre.target
+Requires=load-usb-config.service mount-all-disks.service
+ConditionPathExists=/run/config.env
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/load-docker-config.sh
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

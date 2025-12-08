@@ -1,0 +1,15 @@
+[Unit]
+Description=Lance le script de montage automatique des remotes Rclone
+After=load-rclone-config.service
+Requires=load-rclone-config.service
+
+[Service]
+EnvironmentFile=/etc/environment
+Type=simple
+ExecStart=/usr/local/bin/rclone-automount.sh
+Restart=on-failure
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

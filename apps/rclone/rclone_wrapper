@@ -1,0 +1,16 @@
+#!/bin/bash
+
+HOST=$(hostname)
+MDNS_NAME="$HOST.local"
+
+# Détection automatique du nom public affichable
+if avahi-resolve-host-name -4 "$MDNS_NAME" >/dev/null 2>&1; then
+    DISPLAY_HOST="$MDNS_NAME"
+else
+    DISPLAY_HOST="$HOST"
+fi
+
+
+# Exécution de rclone avec remplacement des URLs localhost
+rclone.real "$@" 2>&1 \
+  | sed -u "s#http://127.0.0.1:53682*#http://${DISPLAY_HOST}:53683#g"

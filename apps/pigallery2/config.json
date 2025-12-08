@@ -1,0 +1,34 @@
+{
+  "Server": {
+    "applicationTitle": "Photos",
+    "host": "127.0.0.1",
+    "port": 8082,
+    "urlBase": "/photos"
+  },
+  "Users": {
+    "authenticationRequired": false,
+    "unAuthenticatedUserRole": "User"
+  },
+  "Media": {
+    "Video": {
+      "enabled": false
+    },
+    "folder": "%STORAGE_PHOTO%",
+    "tempFolder": "%WORKING_DIR%"
+  },
+  "Album": {
+    "enabled": false
+  },
+  "Sharing": {
+    "enabled": false
+  },
+  "Search": {
+    "enabled": false
+  },
+  "Map": {
+    "enabled": false
+  },
+  "Faces": {
+    "enabled": false
+  }
+}
