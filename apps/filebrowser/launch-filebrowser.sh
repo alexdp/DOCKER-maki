@@ -15,10 +15,10 @@ usermod -aG users filebrowser
 
 # Définition de STORAGE_SHARE en s'appuyant sur STORAGE_LOCATION ou, par défaut, /tmp/share
 STORAGE_SHARE="/tmp/share"
-CACHE_DIR="/tmp/filebrowser/cache"
+WORKING_DIR="/tmp/filebrowser"
 if [ -n "$STORAGE_LOCATION" ] && [ "$STORAGE_LOCATION" != "auto" ]; then
     STORAGE_SHARE="$STORAGE_LOCATION"
-    CACHE_DIR="$STORAGE_LOCATION/.filebrowser/cache"
+    WORKING_DIR="$STORAGE_LOCATION/.filebrowser"
 fi
 if [ -z "$STORAGE_LOCATION" ] || [ "$STORAGE_LOCATION" == "auto" ]; then
     FIRST_MOUNT=$(ls -1 /mnt 2>/dev/null | head -n 1)
@@ -31,7 +31,7 @@ if [ -z "$STORAGE_LOCATION" ] || [ "$STORAGE_LOCATION" == "auto" ]; then
             rm -f "$FIRST_MOUNT/.test_write"
             # Définir le répertoire de partage
             STORAGE_SHARE="$FIRST_MOUNT"
-            CACHE_DIR="$FIRST_MOUNT/.filebrowser/cache"
+            WORKING_DIR="$FIRST_MOUNT/.filebrowser"
         else
             echo "Le disque $FIRST_MOUNT n'est pas accessible en écriture"
         fi
@@ -40,12 +40,12 @@ fi
 
 echo "Répertoire de racine pour Filebrowser défini sur : $STORAGE_SHARE"
 
-echo "Répertoire de cache pour Filebrowser défini sur : $CACHE_DIR"
-if [ ! -d "$CACHE_DIR" ]; then
-    echo "Création du répertoire de cache pour Filebrowser : $CACHE_DIR"
-    mkdir -p "$CACHE_DIR"
-    chown filebrowser:users "$CACHE_DIR"
+echo "Répertoire de travail pour Filebrowser défini sur : $WORKING_DIR"
+if [ ! -d "$WORKING_DIR" ]; then
+    echo "Création du répertoire de travail pour Filebrowser : $WORKING_DIR"
+    mkdir -p "$WORKING_DIR"
 fi
+chown -R filebrowser:users "$WORKING_DIR"
 
 # Corriger les permissions sur la racine de filebrowser
 chown filebrowser:users "$STORAGE_SHARE"
@@ -62,7 +62,7 @@ fi
   --file-mode "0o664" \
   --dir-mode "0o775" \
   --hideDotfiles=true \
-  --cache-dir "$CACHE_DIR" \
+  --cache-dir "$WORKING_DIR/cache" \
   --disable-preview-resize \
   --disable-thumbnails \
   --disable-type-detection-by-header \

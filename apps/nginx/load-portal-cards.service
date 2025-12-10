@@ -1,0 +1,13 @@
+[Unit]
+Description=Prépare le fichier portal-cards.json pour le portail web
+After=network.target
+Before=nginx.service
+Requires=nginx.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/load-portal-cards.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

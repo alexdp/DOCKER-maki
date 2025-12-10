@@ -56,7 +56,7 @@ if [ ! -d "$RCLONE_WORKING_DIR" ]; then
     echo "Création du répertoire de travail RClone : $RCLONE_WORKING_DIR"
     mkdir -p "$RCLONE_WORKING_DIR"
 fi
-chown rclone:users "$RCLONE_WORKING_DIR"
+chown -R rclone:users "$RCLONE_WORKING_DIR"
 chmod g+rw "$RCLONE_WORKING_DIR"
 setfacl -d -m g:users:rwX $RCLONE_WORKING_DIR
 
@@ -65,7 +65,7 @@ if [ ! -d "$RCLONE_CACHE_DIR" ]; then
     echo "Création du répertoire de cache RClone : $RCLONE_CACHE_DIR"
     mkdir -p "$RCLONE_CACHE_DIR"
 fi
-chown rclone:users "$RCLONE_CACHE_DIR"
+chown -R rclone:users "$RCLONE_CACHE_DIR"
 chmod g+rw "$RCLONE_CACHE_DIR"
 setfacl -d -m g:users:rwX $RCLONE_CACHE_DIR
 

@@ -139,21 +139,115 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function replaceHostnameInLinks() {
             const hostname = window.location.hostname;
             if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
                 document.querySelectorAll('a[href*="[IP]"], code').forEach(el => {
-                    if (el.tagName === 'A') el.href = el.href.replace('[IP]', hostname);
-                    else el.textContent = el.textContent.replace(/\[IP\]/g, hostname);
+                    if (el.tagName === 'A') {
+                        el.href = el.href.replace('[IP]', hostname);
+                    } else {
+                        el.textContent = el.textContent.replace(/\[IP\]/g, hostname);
+                    }
                 });
                 document.querySelectorAll('span.service-port').forEach(el => {
                     el.textContent = el.textContent.replace(/\[IP\]/g, hostname);
                 });
             }
+        }
 
+        function animateServiceCards() {
             const cards = document.querySelectorAll('.service-card');
-            cards.forEach((card, i) => card.style.animationDelay = `${i * 0.1}s`);
+            cards.forEach((card, i) => {
+                card.style.animationDelay = `${i * 0.1}s`;
+            });
+        }
+
+        async function loadAdditionalCards() {
+            try {
+                const url = new URL('/portal-cards.json', window.location.origin).href;
+                const res = await fetch(url, {cache: 'no-store'});
+                if (!res.ok) return; // fichier pas dispo, on ne fait rien
+                const cards = await res.json();
+                if (!Array.isArray(cards)) return;
+
+                const container = document.querySelector('.services-grid');
+                if (!container) return;
+
+                // Icônes possibles (tu peux compléter)
+                const iconsMap = {
+                    film: '🎬',           // film, vidéo
+                    image: '🖼️',          // photo, galerie
+                    cloud: '☁️',          // cloud, stockage
+                    cogs: '⚙️',           // paramètres, config
+                    database: '🗄️',       // base de données, backup
+                    file: '📁',           // fichiers, gestionnaire
+                    lock: '🔒',           // sécurité, accès sécurisé
+                    key: '🗝️',            // clé, authentification
+                    terminal: '💻',        // terminal, ssh
+                    server: '🖥️',         // serveur
+                    network: '📡',         // réseau, wifi
+                    bug: '🐞',             // debug, erreurs
+                    chart: '📊',           // statistiques, analytics
+                    download: '⬇️',        // téléchargement
+                    upload: '⬆️',          // upload
+                    gear: '🔧',            // outils, maintenance
+                    plug: '🔌',            // connectivité
+                    rocket: '🚀',          // lancement, performance
+                    shield: '🛡️',         // protection, firewall
+                    envelope: '✉️',        // mail, messages
+                    calendar: '📅',        // calendrier, planning
+                    globe: '🌐',           // internet, site web
+                    star: '⭐',             // favoris, important
+                    chat: '💬',            // chat, messagerie
+                    wifi: '📶',            // wifi
+                    book: '📚',            // documentation
+                    camera: '📷',          // caméra, vidéosurveillance
+                    music: '🎵',           // musique
+                    database: '🛢️',       // base de données (réservoir)
+                    lock_open: '🔓',       // accès ouvert
+                    mail: '📧',            // email
+                    phone: '📞',           // téléphone
+                    code: '👨‍💻',           // développement, code
+                    recycle: '♻️',         // sauvegarde, récupération
+                    puzzle: '🧩',          // plugin, extension
+                    folder: '📂',          // dossier
+                    bug_fix: '🛠️',         // réparation, fix
+                };
+
+                cards.forEach(card => {
+                    // Vérifie que les champs essentiels sont présents
+                    if (!card.name || !card.url) return;
+
+                    const icon = iconsMap[card.icon] || '📌';
+
+                    // Crée la carte
+                    const a = document.createElement('a');
+                    a.href = card.url;
+                    a.target = "_blank";
+                    a.rel = "noopener noreferrer";
+                    a.className = 'service-card custom';
+
+                    a.innerHTML = `
+                        <span class="service-icon">${icon}</span>
+                        <h3>${card.name}</h3>
+                        <p>${card.description || ''}</p>
+                        <span class="service-port">${card.url}</span>
+                    `;
+
+                    container.appendChild(a);
+                });
+
+            } catch (e) {
+                console.warn('Erreur chargement portal-cards.json:', e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadAdditionalCards();
+            replaceHostnameInLinks();
+            animateServiceCards();
         });
+
     </script>
 
 </body>

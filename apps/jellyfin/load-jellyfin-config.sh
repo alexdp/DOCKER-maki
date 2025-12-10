@@ -55,8 +55,8 @@ if [ ! -d "$WORKING_DIR" ]; then
     mkdir -p "$WORKING_DIR/data"
     mkdir -p "$WORKING_DIR/log"
     mkdir -p "$WORKING_DIR/cache"
-    chown jellyfin:jellyfin "$WORKING_DIR"
 fi
+chown -R jellyfin:users "$WORKING_DIR"
 
 echo "Configuration de Jellyfin pour utiliser le répertoire de travail personnalisé..."
 JELLYFIN_ENV_FILE="/etc/default/jellyfin"

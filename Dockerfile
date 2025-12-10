@@ -168,6 +168,7 @@ COPY authentication/ldap/ldap.conf $CHROOT_DIR/etc/ldap/ldap.conf
 # Configure le montage automatique des volumes au démarrage
 COPY boot/storage/mount-all-disks.service $CHROOT_DIR/etc/systemd/system/
 COPY boot/storage/mount-all-disks.sh $CHROOT_DIR/usr/local/bin/
+RUN chmod -x $CHROOT_DIR/etc/systemd/system/mount-all-disks.service
 RUN chmod +x $CHROOT_DIR/usr/local/bin/mount-all-disks.sh
 RUN chroot $CHROOT_DIR systemctl enable mount-all-disks.service
 
@@ -248,6 +249,11 @@ COPY apps/nginx/portal.conf $CHROOT_DIR/etc/nginx/sites-available/portal.conf
 RUN chroot $CHROOT_DIR ln -s /etc/nginx/sites-available/portal.conf /etc/nginx/sites-enabled/portal.conf
 RUN chroot $CHROOT_DIR rm /etc/nginx/sites-enabled/default
 COPY apps/nginx/www $CHROOT_DIR/var/www/html
+COPY apps/nginx/load-portal-cards.service $CHROOT_DIR/usr/lib/systemd/system/
+COPY apps/nginx/load-portal-cards.sh $CHROOT_DIR/usr/local/bin/load-portal-cards.sh
+RUN chmod -x $CHROOT_DIR/usr/lib/systemd/system/load-portal-cards.service
+RUN chmod +x $CHROOT_DIR/usr/local/bin/load-portal-cards.sh
+RUN chroot $CHROOT_DIR systemctl enable load-portal-cards.service
 
 
 # Configure le terminal web SSH Shellinabox (l'installation est déjà faite plus haut)

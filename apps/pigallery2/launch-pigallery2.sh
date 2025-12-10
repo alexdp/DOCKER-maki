@@ -55,8 +55,8 @@ setfacl -d -m g:users:rwX $STORAGE_PHOTO
 if [ ! -d "$WORKING_DIR" ]; then
     echo "Création du répertoire de travail Pigallery2 : $WORKING_DIR"
     mkdir -p "$WORKING_DIR"
-    chown pigallery2:users "$WORKING_DIR"
 fi
+chown -R pigallery2:users "$WORKING_DIR"
 
 echo "Configuration de Pigallery2 pour utiliser le répertoire de stockage personnalisé..."
 CONFIG_FILE="/opt/pigallery2/config.json"
