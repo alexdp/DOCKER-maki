@@ -2,7 +2,7 @@
 
 Ce projet est une alternative aux NAS du commerce à travers une distribution Linux à mettre une clé USB "live". L'idée de ce projet est de faire en sorte que vos disques durs ne contiennent que vos données. Vous pouvez y accéder depuis un autre Linux "live" ou un autre système de façon très simple. Aucun risque de corrompre vos système, il suffit de redémarrer votre PC pour que la clé USB recharge un système tout neuf.
 
-Ce projet permet de générer automatiquement une image ISO Ubuntu 24.04 (Noble) contenant :
+Ce projet permet de générer automatiquement une image ISO Ubuntu 26.04 (Resolute) contenant :
 - Portail web d'accès à tous les services (http://\[IP\])
 - FileBrowser pour l'accès web aux fichiers
 - Samba pour le partage de fichiers sous Windows
@@ -11,18 +11,20 @@ Ce projet permet de générer automatiquement une image ISO Ubuntu 24.04 (Noble)
 - Kopia pour gérér des sauvegardes sur un espace à part
 - Rclone (accessible en ligne de commande) pour monter des volumes cloud (Google Drive, OneDrive, DropBox, ...)
 - SSH configuré pour l'accès distant (avec Shellinabox pour un accès simplifié via le navigateur internet)
+- Striling PDF pour les travaux sur les fichiers PDF (fusion, signature, wartermark, ...)
 - Docker pour le déploiement simple d'applications tierces (avec stockage des données sur le premier volume monté ou suivant la configuration "storage location" définie dans config.json)
 
 
 # Utilisation
 
-Transférer l'ISO sur une clé USB avec un outil laissant la clé lisible sous Microsoft Windows afin d'y déposer un fichier config.json pour paramétrer l'ISO tel que balenaEtcher.
+Transférer l'ISO sur une clé USB avec un outil laissant la clé lisible sous Microsoft Windows afin d'y déposer un fichier config.json pour paramétrer l'ISO tel que balenaEtcher ou Rufus. Rufus permet de formatter la clé USB en FAT32, ce qui permet d'y accéder facilement depuis une machine Microsoft Windows pour la customisation du config.json
 
 # Configuration
 
 La configuration est automatique au démarrage : 
 - Détection de la première carte réseau filaire et IP automatique (DHCP)
 - Montage automatique de tous les volumes disques dans /mnt
+- Le portail web peut être enrichi (portal cards) pour y ajouter des raccourcis vers vos applications web sous Docker
 
 Selon le cas d'usage (paramétrage WIFI par exemple), il est possible de poser à la racine de la clé USB un fichier config.json à paramétrer selon le modèle suivant : 
 
@@ -49,7 +51,13 @@ Selon le cas d'usage (paramétrage WIFI par exemple), il est possible de poser �
     {"name": "guest", "password": "guest"},
     {"name": "open_guest"},
     {"name": "ubuntu", "admin": true}
-  ]
+  ],
+  "portal": {
+    "cards" : [
+      {"name": "Stirling PDF", "description": "Traitement des fichiers PDF", "icon": "bug_fix", "url": "http://[IP]:8088"},
+      {"name": "Portainer", "description": "Gestion des conteneurs Docker", "icon": "server", "url": "http://[IP]:9000"}
+    ]
+  }
 }
 ````
 
