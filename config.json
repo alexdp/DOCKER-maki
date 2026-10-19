@@ -7,11 +7,5 @@
     {"name": "admin", "password": "admin", "admin": true},
     {"name": "guest", "password": "guest"},
     {"name": "ubuntu", "admin": true}
-  ],
-  "portal": {
-    "cards" : [
-      {"name": "Stirling PDF", "description": "Traitement des fichiers PDF", "icon": "bug_fix", "url": "http://[IP]:8088"},
-      {"name": "Portainer", "description": "Gestion des conteneurs Docker", "icon": "server", "url": "http://[IP]:9000"}
-    ]
-  }
+  ]
 }
